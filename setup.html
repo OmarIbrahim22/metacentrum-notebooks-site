@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run on OnDemand · MetaCentrum Notebooks</title>
+<meta name="description" content="How to set up and run the MetaCentrum notebooks yourself on MetaCentrum OnDemand.">
+<style>
+:root{color-scheme:light;--bg:#f4f5f7;--fg:#1d1d1f;--fg2:#3c4043;--muted:#5f6368;--faint:#80868b;
+--panel:#fff;--line:#e3e5e8;--line2:#d5d8dc;--hover:#f4f6f8;--accent:#0b57d0;--accent-hover:#0a4cb5;--on-accent:#fff;
+--band:#eaf1fb;--band-line:#d3e0f3;--kicker:#3c64a8;--pill:#f1f3f4;--tip:#202124;--tip-fg:#f1f3f4;
+--shadow:0 1px 3px rgba(0,0,0,.05);--shadow-hi:0 6px 18px rgba(0,0,0,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#151618;--fg:#e8eaed;
+--fg2:#c4c7cc;--muted:#9aa0a6;--faint:#80868b;--panel:#1e1f22;--line:#2e3034;--line2:#3c3f44;--hover:#26282c;
+--accent:#8ab4f8;--accent-hover:#aecbfa;--on-accent:#0b1d3a;--band:#18223a;--band-line:#26365a;--kicker:#8ab4f8;
+--pill:#2a2c30;--tip:#e8eaed;--tip-fg:#202124;--shadow:0 1px 3px rgba(0,0,0,.4);--shadow-hi:0 6px 18px rgba(0,0,0,.5)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent)}
+.sc-i{fill:currentColor;flex:none}
+.sc-wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+/* header */
+.sc-head{background:var(--panel);border-bottom:1px solid var(--line)}
+.sc-head .sc-wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;flex-wrap:wrap;
+padding-top:8px;padding-bottom:8px}
+.sc-brand{display:flex;align-items:center;gap:10px;color:var(--fg);text-decoration:none;font-weight:650;font-size:16px}
+.sc-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sc-btn{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:8px;
+border:1px solid var(--line2);background:var(--panel);color:var(--fg);text-decoration:none;font-size:14px;
+font-weight:500;white-space:nowrap;transition:background .15s,border-color .15s,box-shadow .15s}
+.sc-btn:hover{background:var(--hover)}
+.sc-btn:focus-visible,.card-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sc-btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.sc-btn.primary:hover{background:var(--accent-hover)}
+.sc-tip{position:relative;display:inline-flex}
+.sc-tipbox{position:absolute;top:calc(100% + 8px);right:0;z-index:20;width:max-content;max-width:min(320px,86vw);
+background:var(--tip);color:var(--tip-fg);font-size:13px;line-height:1.5;padding:9px 12px;border-radius:8px;
+box-shadow:var(--shadow-hi);opacity:0;visibility:hidden;transform:translateY(-3px);
+transition:opacity .14s,transform .14s,visibility .14s;pointer-events:none}
+.sc-tip:hover .sc-tipbox,.sc-tip:focus-within .sc-tipbox{opacity:1;visibility:visible;transform:none}
+/* intro band */
+.sc-intro{background:var(--band);border-bottom:1px solid var(--band-line)}
+.sc-intro .sc-wrap{padding-top:28px;padding-bottom:28px;display:grid;grid-template-columns:minmax(0,1fr) auto;
+gap:16px 40px;align-items:center}
+.sc-kicker{font-size:12px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--kicker);margin:0 0 4px}
+.sc-intro h1{margin:0;font-size:28px;line-height:1.25}
+.sc-lead{margin:8px 0 0;color:var(--fg2);font-size:16px;max-width:46rem}
+.sc-notice{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--band-line);
+border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--fg2);max-width:24rem}
+.sc-notice .sc-i{color:var(--accent);margin-top:2px}
+.sc-notice strong{color:var(--fg)}
+/* notebook cards */
+main.sc-wrap{padding-top:28px;padding-bottom:40px}
+.sc-h2{font-size:12px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));
+list-style:none;margin:0;padding:0}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);
+display:flex;flex-direction:column;overflow:hidden;transition:border-color .15s,box-shadow .15s,transform .15s}
+.card.ready:hover{border-color:var(--accent);box-shadow:var(--shadow-hi);transform:translateY(-2px)}
+.card-tab{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);
+font:12.5px/1.3 menlo,consolas,"DejaVu Sans Mono",monospace;color:var(--muted);min-width:0}
+.card-tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{margin:0;font-size:16.5px;line-height:1.35}
+.card-link{color:var(--fg);text-decoration:none}
+.card-link::after{content:"";position:absolute;inset:0;border-radius:10px}
+.card p{margin:0;color:var(--muted);font-size:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+overflow:hidden}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:10px;
+font-size:13px}
+.svc{color:var(--faint);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.open{color:var(--accent);font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.open .sc-i{transition:transform .15s}
+.card.ready:hover .open .sc-i{transform:translateX(3px)}
+.soon{background:var(--pill);color:var(--muted);font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;
+white-space:nowrap}
+.card.missing{opacity:.7}
+.card.missing .card-tab svg{filter:grayscale(1)}
+/* how outputs were produced */
+.how{margin-top:36px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;
+box-shadow:var(--shadow)}
+.how h2{margin:0 0 4px;font-size:17px}
+.how > p{margin:0;color:var(--muted);font-size:14px}
+.how dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin:16px 0}
+.how dl div{border-left:3px solid var(--band-line);padding:2px 0 2px 12px}
+.how dt{font-weight:600;font-size:14px}
+.how dd{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+footer{color:var(--muted);font-size:13px;padding-bottom:32px}
+.card .sc-kicker{font-size:11.5px;margin:0}
+@media (max-width:860px){
+ .sc-wrap{padding:0 16px}
+ .sc-intro .sc-wrap{grid-template-columns:1fr;padding-top:20px;padding-bottom:20px}
+ .sc-intro h1{font-size:24px}
+ .sc-notice{max-width:none}
+ .sc-btn{height:34px;padding:0 10px}
+ .sc-btn .lbl{display:none}
+ main.sc-wrap{padding-top:20px}
+}
+
+:root{--warn-bg:#fef7e0;--warn-line:#f6dd9a;--warn-fg:#5c4400;--warn-icon:#b06000}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--warn-bg:#2e2508;--warn-line:#5a4610;
+--warn-fg:#fde7a6;--warn-icon:#fdd663}}
+
+.tut{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;align-items:start}
+.toc{position:sticky;top:16px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;counter-reset:s}
+.toc a{display:flex;gap:10px;padding:7px 12px;border-radius:8px;color:var(--fg2);text-decoration:none;font-size:14px}
+.toc a:hover{background:var(--hover);color:var(--fg)}
+.toc .n{color:var(--faint);font-variant-numeric:tabular-nums}
+.toc .alt{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+.steps{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:20px 22px;
+scroll-margin-top:16px}
+.step h2{display:flex;align-items:center;gap:12px;margin:0 0 10px;font-size:18px}
+.badge-n{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;
+background:var(--band);color:var(--kicker);font-size:14px;font-weight:700;flex:none}
+.step p,.step li{color:var(--fg2)}
+.step p{margin:8px 0}
+.step ol,.step ul{margin:8px 0;padding-left:22px}
+.step li{margin:4px 0}
+.step code{font:13px menlo,consolas,"DejaVu Sans Mono",monospace;background:var(--pill);padding:1px 5px;border-radius:4px}
+.cmd{position:relative;margin:10px 0}
+.cmd pre{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 70px 12px 14px;
+overflow-x:auto;font:13px/1.6 menlo,consolas,"DejaVu Sans Mono",monospace;color:var(--fg)}
+.copy{position:absolute;top:7px;right:7px;height:28px;padding:0 10px;border-radius:6px;border:1px solid var(--line2);
+background:var(--panel);color:var(--fg2);font:12px system-ui,sans-serif;cursor:pointer}
+.copy:hover{background:var(--hover)}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.tbl th,.tbl td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{color:var(--muted);font-weight:600;font-size:12.5px}
+.tbl td{color:var(--fg2)}
+.tbl-wrap{overflow-x:auto}
+.note{display:flex;gap:10px;align-items:flex-start;background:var(--band);border:1px solid var(--band-line);
+border-radius:8px;padding:10px 12px;font-size:14px;color:var(--fg2);margin:12px 0 4px}
+.note .sc-i{color:var(--accent);margin-top:2px}
+.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-fg)}
+.warn .sc-i{color:var(--warn-icon)}
+.step.alt h2 .badge-n{background:var(--pill);color:var(--muted)}
+.sc-btn .warn-dot{color:var(--warn-icon)}
+@media (max-width:860px){.tut{grid-template-columns:minmax(0,1fr)}.toc{display:none}.step{padding:16px}}
+</style></head>
+<body>
+<header class="sc-head"><div class="sc-wrap">
+<a class="sc-brand" href="index.html"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>MetaCentrum Notebooks</a>
+<div class="sc-actions"><a class="sc-btn" href="https://github.com/OmarIbrahim22/metacentrum-notebooks"><svg class="sc-i" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg><span class="lbl">Source repository</span></a></div>
+</div></header>
+<section class="sc-intro"><div class="sc-wrap">
+<div><p class="sc-kicker">Run it yourself</p><h1>Set up the notebooks on MetaCentrum OnDemand</h1>
+<p class="sc-lead">The pages on this site are read-only. To run the notebooks with your own account, start
+JupyterLab on OnDemand and follow these steps. It takes about ten minutes the first time.</p></div>
+<div class="sc-notice"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg><div><strong>Want it done for you?</strong> BinderHub sets everything up
+automatically, but it may not be working properly at the moment. <a href="#binder">More below</a>.</div></div>
+</div></section>
+<main class="sc-wrap"><div class="tut">
+<nav class="toc" aria-label="Steps"><h2 class="sc-h2">Steps</h2><ol><li><a href="#before"><span class="n">1</span>Before you start</a></li><li><a href="#start"><span class="n">2</span>Start JupyterLab on OnDemand</a></li><li><a href="#clone"><span class="n">3</span>Download the notebooks</a></li><li><a href="#install"><span class="n">4</span>Install the dependencies</a></li><li><a href="#credentials"><span class="n">5</span>Set up your credentials</a></li><li><a href="#run"><span class="n">6</span>Run a notebook</a></li><li><a href="#later"><span class="n">7</span>Coming back later</a></li><li class="alt"><a href="#binder"><span class="n">or</span>Guided setup on BinderHub</a></li></ol></nav>
+<div class="steps"><section class="step" id="before"><h2><span class="badge-n">1</span>Before you start</h2>
+<ul>
+<li>A <strong>MetaCentrum account</strong>. You sign in to OnDemand with your e-INFRA CZ / MetaCentrum
+login; if you do not have one, apply at <a href="https://metavo.metacentrum.cz/">metavo.metacentrum.cz</a>.</li>
+<li><strong>Credentials only for the services you want to try.</strong> Notebooks 00, 05, 06 and 07 need none.</li>
+</ul>
+<div class="tbl-wrap"><table class="tbl"><thead><tr><th>#</th><th>Notebook</th><th>Needs</th></tr></thead>
+<tbody><tr><td>00</td><td>Environment Check &amp; Diagnostics</td><td>None</td></tr><tr><td>01</td><td>S3 Object Storage Integration</td><td>S3 endpoint, access key, secret key, bucket</td></tr><tr><td>02</td><td>Invenio Repository Integration (EOSC CZ / NRP)</td><td>NRP API token</td></tr><tr><td>03</td><td>OpenStack API Integration</td><td>OpenStack application credentials</td></tr><tr><td>04</td><td>Open WebUI Chat API Integration</td><td>AI API token</td></tr><tr><td>05</td><td>GPU Container with AI Model</td><td>None</td></tr><tr><td>06</td><td>R Kernel Demonstration</td><td>None (R kernel required)</td></tr><tr><td>07</td><td>MATLAB Kernel Demonstration</td><td>None (MATLAB kernel required)</td></tr></tbody></table></div></section><section class="step" id="start"><h2><span class="badge-n">2</span>Start JupyterLab on OnDemand</h2>
+<ol>
+<li>Open <a href="https://ondemand.metacentrum.cz">ondemand.metacentrum.cz</a> and sign in with your e-INFRA CZ / MetaCentrum login.</li>
+<li>Under <strong>Interactive Apps</strong>, choose <strong>Jupyter</strong>.</li>
+<li>Pick the resources for the session. A couple of CPU cores, a few GB of memory and a few hours of walltime
+are enough for every notebook except 05; request a GPU only if you want to run notebook 05.</li>
+<li>Launch the session, wait until it is running, then connect to it. JupyterLab opens in a new tab.</li>
+</ol>
+<div class="note"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg><div>The OnDemand form changes from time to time. MetaCentrum's
+<a href="https://docs.metacentrum.cz/en/docs/software/sw-list/jupyter">Jupyter documentation</a> describes the current options.</div></div></section><section class="step" id="clone"><h2><span class="badge-n">3</span>Download the notebooks</h2>
+<p>In JupyterLab, open a terminal (<strong>File → New → Terminal</strong>) and clone the repository into your
+home directory:</p>
+<div class="cmd"><pre>git clone https://github.com/OmarIbrahim22/metacentrum-notebooks.git
+cd metacentrum-notebooks</pre><button class="copy" type="button">Copy</button></div></section><section class="step" id="install"><h2><span class="badge-n">4</span>Install the dependencies</h2>
+<p>Still in the terminal, inside the <code>metacentrum-notebooks</code> folder, install everything the notebooks
+use. JupyterLab itself is already there.</p>
+<div class="cmd"><pre>pip install -e &quot;.[all]&quot;</pre><button class="copy" type="button">Copy</button></div>
+<p>To install only what one notebook needs, use its extra instead of <code>all</code>:
+<code>s3</code> (01), <code>invenio</code> (02), <code>openstack</code> (03) or <code>openwebui</code> (04).
+Notebooks 00 and 05 need nothing extra.</p>
+<div class="note"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg><div>If pip says it cannot write to the install location, run the same
+command with <code>--user</code> added. A notebook never installs anything itself; if a package is missing,
+its first cell prints the exact command to run.</div></div></section><section class="step" id="credentials"><h2><span class="badge-n">5</span>Set up your credentials</h2>
+<ol>
+<li>Open <code>notebooks/00_environment_check.ipynb</code> and run all cells (<strong>Run → Run All Cells</strong>).</li>
+<li>It checks your environment, then its setup wizard asks for each credential and saves them to
+<code>~/.config/mcnb/env</code> in your home directory. They are never written into the repository.</li>
+</ol>
+<p>Prefer a file? Copy <code>env.example</code> to <code>.env</code> in the repository folder and fill in your values;
+each variable links to the page where you get it.</p></section><section class="step" id="run"><h2><span class="badge-n">6</span>Run a notebook</h2>
+<p>Open any notebook from the <code>notebooks</code> folder and run it top to bottom. Each one is self-contained.</p>
+<ul>
+<li><strong>01 and 02</strong> create one test object / one draft record and delete it again in their Cleanup
+section. <strong>03 and 04</strong> only read.</li>
+<li><strong>05</strong> needs a session with a GPU. OnDemand runs Jupyter inside Apptainer, so the notebook uses
+Apptainer, not Docker.</li>
+<li><strong>06</strong> runs on the R kernel and <strong>07</strong> on the MATLAB kernel; switch with
+<strong>Kernel → Change Kernel</strong>.</li>
+</ul></section><section class="step" id="later"><h2><span class="badge-n">7</span>Coming back later</h2>
+<p>A session stops when its walltime runs out. Start a new Jupyter session the same way; the cloned folder and
+your credentials stay in your home directory. If a notebook then reports a missing package, run the install
+command from step 4 again.</p></section><section class="step alt" id="binder"><h2><span class="badge-n"><svg class="sc-i" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></span>Prefer a guided setup? Use BinderHub</h2>
+<p>BinderHub opens a ready-made Jupyter session with the notebooks and every dependency already installed, so
+steps 2 to 4 are done for you. You still sign in with your e-INFRA CZ / MetaCentrum login and enter your own
+credentials.</p>
+<div class="note warn"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg><div><strong>BinderHub may not be working properly at the moment.</strong> If the session does not
+start, use the OnDemand steps above instead.</div></div>
+<p><a class="sc-btn" href="https://binderhub.cloud.e-infra.cz/v2/gh/OmarIbrahim22/metacentrum-notebooks-binder/main?labpath=notebooks/00_environment_check.ipynb"><svg class="sc-i" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Open on BinderHub</a></p></section></div>
+</div></main>
+<footer class="sc-wrap">Part of a bachelor thesis on Jupyter notebooks for MetaCentrum / e-INFRA CZ.</footer>
+<script>
+document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(b.previousElementSibling.textContent); b.textContent = 'Copied'; }
+  catch (e) { b.textContent = 'Select and copy'; }
+  setTimeout(() => { b.textContent = 'Copy'; }, 1500);
+}));
+</script>
+</body></html>
