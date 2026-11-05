@@ -133,6 +133,23 @@ border-radius:8px;padding:10px 12px;font-size:14px;color:var(--fg2);margin:12px 
 .note .sc-i{color:var(--accent);margin-top:2px}
 .warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-fg)}
 .warn .sc-i{color:var(--warn-icon)}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:10px 0 4px}
+.spec div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;
+flex-direction:column;gap:2px}
+.spec span{font-size:12px;color:var(--muted)}
+.spec strong{font-size:15px;color:var(--fg)}
+.more{margin-top:14px;border:1px solid var(--line);border-radius:8px}
+.more summary{cursor:pointer;padding:10px 14px;font-weight:600;color:var(--accent);list-style:none;display:flex;
+align-items:center;gap:8px}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;
+border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin-right:2px}
+.more[open] summary::before{transform:rotate(45deg)}
+.more summary:hover{background:var(--hover)}
+.more-body{padding:4px 16px 14px;border-top:1px solid var(--line)}
+.more h3{font-size:15px;margin:16px 0 6px}
+.more .opt{border-left:3px solid var(--band-line);padding:2px 0 2px 12px;margin:12px 0}
+.more .opt p{margin:4px 0}
 .step.alt h2 .badge-n{background:var(--pill);color:var(--muted)}
 .sc-btn .warn-dot{color:var(--warn-icon)}
 @media (max-width:860px){.tut{grid-template-columns:minmax(0,1fr)}.toc{display:none}.step{padding:16px}}
@@ -155,15 +172,20 @@ automatically, but it may not be working properly at the moment. <a href="#binde
 <ul>
 <li>A <strong>MetaCentrum account</strong>. You sign in to OnDemand with your e-INFRA CZ / MetaCentrum
 login; if you do not have one, apply at <a href="https://metavo.metacentrum.cz/">metavo.metacentrum.cz</a>.</li>
-<li><strong>Credentials only for the services you want to try.</strong> Notebooks 00, 05, 06 and 07 need none.</li>
+<li><strong>Credentials only for the services you want to try.</strong></li>
 </ul>
 <div class="tbl-wrap"><table class="tbl"><thead><tr><th>#</th><th>Notebook</th><th>Needs</th></tr></thead>
 <tbody><tr><td>00</td><td>Environment Check &amp; Diagnostics</td><td>None</td></tr><tr><td>01</td><td>S3 Object Storage Integration</td><td>S3 endpoint, access key, secret key, bucket</td></tr><tr><td>02</td><td>Invenio Repository Integration (EOSC CZ / NRP)</td><td>NRP API token</td></tr><tr><td>03</td><td>OpenStack API Integration</td><td>OpenStack application credentials</td></tr><tr><td>04</td><td>Open WebUI Chat API Integration</td><td>AI API token</td></tr><tr><td>05</td><td>GPU Container with AI Model</td><td>None</td></tr><tr><td>06</td><td>R Kernel Demonstration</td><td>None (R kernel required)</td></tr><tr><td>07</td><td>MATLAB Kernel Demonstration</td><td>None (MATLAB kernel required)</td></tr></tbody></table></div></section><section class="step" id="start"><h2><span class="badge-n">2</span>Start JupyterLab on OnDemand</h2>
 <ol>
 <li>Open <a href="https://ondemand.metacentrum.cz">ondemand.metacentrum.cz</a> and sign in with your e-INFRA CZ / MetaCentrum login.</li>
 <li>Under <strong>Interactive Apps</strong>, choose <strong>Jupyter</strong>.</li>
-<li>Pick the resources for the session. A couple of CPU cores, a few GB of memory and a few hours of walltime
-are enough for every notebook except 05; request a GPU only if you want to run notebook 05.</li>
+<li>Pick the resources for the session. These are enough for every notebook:
+<div class="spec">
+<div><span>CPU cores</span><strong>2</strong></div>
+<div><span>Memory</span><strong>4 GB</strong></div>
+<div><span>Walltime</span><strong>2–4 hours</strong></div>
+<div><span>GPU</span><strong>Only for notebook 05</strong></div>
+</div></li>
 <li>Launch the session, wait until it is running, then connect to it. JupyterLab opens in a new tab.</li>
 </ol>
 <div class="note"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg><div>The OnDemand form changes from time to time. MetaCentrum's
@@ -175,12 +197,12 @@ cd metacentrum-notebooks</pre><button class="copy" type="button">Copy</button></
 <p>Still in the terminal, inside the <code>metacentrum-notebooks</code> folder, install everything the notebooks
 use. JupyterLab itself is already there.</p>
 <div class="cmd"><pre>pip install -e &quot;.[all]&quot;</pre><button class="copy" type="button">Copy</button></div>
-<p>To install only what one notebook needs, use its extra instead of <code>all</code>:
-<code>s3</code> (01), <code>invenio</code> (02), <code>openstack</code> (03) or <code>openwebui</code> (04).
-Notebooks 00 and 05 need nothing extra.</p>
-<div class="note"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg><div>If pip says it cannot write to the install location, run the same
-command with <code>--user</code> added. A notebook never installs anything itself; if a package is missing,
-its first cell prints the exact command to run.</div></div></section><section class="step" id="credentials"><h2><span class="badge-n">5</span>Set up your credentials</h2>
+<div class="note"><svg class="sc-i" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg><div>A notebook never installs anything itself; if a package is missing,
+its first cell prints the exact command to run.</div></div>
+<details class="more"><summary>Learn more: what gets installed, why, and your options</summary><div class="more-body"><h3>What each package is for</h3><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Package</th><th>Used by</th><th>Why</th></tr></thead><tbody><tr><td><code>python-dotenv</code></td><td>All Python notebooks</td><td>Reads your credentials from <code>.env</code> or <code>~/.config/mcnb/env</code>.</td></tr><tr><td><code>mcnb</code></td><td>All Python notebooks</td><td>This repository's shared helpers in <code>src/</code>: credential checks, masking secrets in the output, detecting the environment and formatting errors.</td></tr><tr><td><code>boto3</code></td><td>01</td><td>Amazon's S3 client. CESNET storage speaks the S3 protocol, so the standard client works.</td></tr><tr><td><code>requests</code></td><td>02</td><td>Plain HTTP calls to the repository's Invenio REST API.</td></tr><tr><td><code>openstacksdk</code></td><td>03</td><td>The official OpenStack client: signs in with your application credential and lists flavors, images and quotas.</td></tr><tr><td><code>openai</code></td><td>04</td><td>e-INFRA AI Chat offers an OpenAI-compatible API, so the official client works once it is pointed at the e-INFRA address.</td></tr></tbody></table></div><p>Notebooks 05, 06 and 07 need things pip cannot install: 05 uses Apptainer, which OnDemand provides, and downloads its container images when it runs (PyTorch runs inside the container, not in your session); 06 needs the R kernel and 07 the MATLAB kernel with a licence.</p><h3>Ways to install</h3><div class="opt"><strong>Everything at once</strong><p>One command, and every notebook works. It downloads the most; <code>openstacksdk</code> alone brings many packages with it.</p><div class="cmd"><pre>pip install -e &quot;.[all]&quot;</pre><button class="copy" type="button">Copy</button></div></div><div class="opt"><strong>Only what you need</strong><p>List just the extras for the notebooks you want, separated by commas. Smaller and faster to install.</p><div class="cmd"><pre>pip install -e &quot;.[s3,openwebui]&quot;</pre><button class="copy" type="button">Copy</button></div></div><div class="opt"><strong>Into your user folder</strong><p>Add <code>--user</code> when pip has no permission to write to the shared Python installation.</p><div class="cmd"><pre>pip install --user -e &quot;.[all]&quot;</pre><button class="copy" type="button">Copy</button></div></div><div class="opt"><strong>In a separate environment</strong><p>Keeps these packages apart from anything else you use. Jupyter only sees the environment after you register it as a kernel; then choose <strong>Python (mcnb)</strong> under <strong>Kernel → Change Kernel</strong>.</p><div class="cmd"><pre>python -m venv ~/venvs/mcnb
+source ~/venvs/mcnb/bin/activate
+pip install -e &quot;.[all]&quot; ipykernel
+python -m ipykernel install --user --name mcnb --display-name &quot;Python (mcnb)&quot;</pre><button class="copy" type="button">Copy</button></div></div><p><strong>Why <code>-e</code>?</strong> It installs the repository's helper package in editable mode, linked to the folder you cloned. After a <code>git pull</code> the notebooks use the new helpers without reinstalling.</p></div></details></section><section class="step" id="credentials"><h2><span class="badge-n">5</span>Set up your credentials</h2>
 <ol>
 <li>Open <code>notebooks/00_environment_check.ipynb</code> and run all cells (<strong>Run → Run All Cells</strong>).</li>
 <li>It checks your environment, then its setup wizard asks for each credential and saves them to
